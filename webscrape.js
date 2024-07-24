@@ -21,15 +21,15 @@ MovieScraper('https://pahe.ink/')
 const url = "https://pahe.ink/";
 
 const main = async () => {
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
 
     const allArticles = await page.evaluate(() => {
-        const article = document.querySelector('article');
+        const articles = document.querySelectorAll('article');
 
-        return Array.from(articles).slice(0, 3).map((article) => {
-            const movieTitle = article.movieTquerySelector('h2').innerText;
+        return Array.from(articles).slice(0, 12).map((article) => {
+            const movieTitle = article.querySelector('h2').innerText;
             const thumbnail = article.querySelector('a').href;
             const description = article.querySelector('p').innerText;
             return { movieTitle, thumbnail, description};
@@ -37,6 +37,7 @@ const main = async () => {
     });
 
     console.log(allArticles);
+    browser.close();
 }
 
 main();
