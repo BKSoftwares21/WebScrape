@@ -1,4 +1,7 @@
 const  puppeteer = require("puppeteer");
+const fs =require('fs');
+const { promisify} = require('util');
+const writeFile = promisify(fs.writeFile);
 
 /*
 async function MovieScraper(url){
@@ -24,6 +27,8 @@ const main = async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
+    const html = await page.content();
+    
 
     const allArticles = await page.evaluate(() => {
         const articles = document.querySelectorAll('article');
@@ -35,6 +40,7 @@ const main = async () => {
             return { movieTitle, thumbnail, description};
         });
     });
+    await writeFile('output.html', html);
 
     console.log(allArticles);
     browser.close();

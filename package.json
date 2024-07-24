@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "httpie": "^1.1.2",
     "puppeteer": "^22.13.1"
   }
 }
