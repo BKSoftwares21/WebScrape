@@ -28,6 +28,16 @@ const main = async () => {
     const allArticles = await page.evaluate(() => {
         const article = document.querySelector('article');
 
-        return Array.from(articles).slice(0, 3).map((article)) => {
+        return Array.from(articles).slice(0, 3).map((article) => {
             const movieTitle = article.movieTquerySelector('h2').innerText;
-            const thumbnail = article.quer
+            const thumbnail = article.querySelector('a').href;
+            const description = article.querySelector('p').innerText;
+            return { movieTitle, thumbnail, description};
+        });
+    });
+
+    console.log(allArticles);
+}
+
+main();
+    
