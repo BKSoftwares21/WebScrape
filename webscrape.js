@@ -1,22 +1,8 @@
 const  puppeteer = require("puppeteer");
+const fs =require('fs');
+const { promisify} = require('util');
+const writeFile = promisify(fs.writeFile);
 
-/*
-async function MovieScraper(url){
-    const browser = await puppeteer.launch({headless: false})
-    const page = await browser.newPage()
-    await page.goto(url)
-    await page.screenshot({path: 'screenshot.png'})
-    await browser.close()
-
-    const [elem] = await page.$x('//*[@id="pt-cv-content-views-script-js"]')
-    const text = await elem.getProperty('text')
-    const textContent = await text.jsonValue();
-
-    console.log({'textContent'}); 
-}
-
-MovieScraper('https://pahe.ink/')
-*/
 
 const url = "https://pahe.ink/";
 
@@ -24,6 +10,7 @@ const main = async () => {
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     await page.goto(url);
+    const html = await page.content();
 
     const allArticles = await page.evaluate(() => {
         const article = document.querySelector('article');
@@ -35,6 +22,7 @@ const main = async () => {
             return { movieTitle, thumbnail, description};
         });
     });
+    await writeFile('output.html', html);
 
     console.log(allArticles);
 }
