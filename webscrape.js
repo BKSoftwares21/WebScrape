@@ -22,7 +22,14 @@ const main = async () => {
             const linkTags = Array.from(document.querySelectorAll('a'));
             return linkTags.map(tag => tag.href);
         })
-        console.log(extractLinks);
+
+        const extractImages = await page.evaluate(() => {
+            const imageTags = Array.from(document.querySelectorAll('img'));
+            return imageTags.map(tag => tag.src);
+        })
+
+        console.log('Links:', extractLinks);
+        console.log('Images:', extractImages);
     } catch (error) {
         console.error('Error during scraping:', error);
     }
