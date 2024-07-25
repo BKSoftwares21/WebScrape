@@ -18,19 +18,11 @@ const main = async () => {
         await page.goto(url);
         const html = await page.content();
 
-        const allArticles = await page.evaluate(() => {
-            const articles = document.querySelectorAll('article');
-
-            return Array.from(articles).slice(0, 3).map((article) => {
-                const movieTitle = article.querySelector('h2') ? article.querySelector('h2').innerText : '';
-                const thumbnail = article.querySelector('a') ? article.querySelector('a').href : '';
-                const description = article.querySelector('p') ? article.querySelector('p').innerText : '';
-                return { movieTitle, thumbnail, description};
-            });
-        });
-        await writeFile('output.html', html);
-        console.log(allArticles);
-    
+        const extractLinks = await page.evaluate(() => {
+            const linkTags = Array.from(document.querySelectorAll('a'));
+            return linkTags.map(tag => tag.href);
+        })
+        console.log(extractLinks);
     } catch (error) {
         console.error('Error during scraping:', error);
     }
