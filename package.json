@@ -8,8 +8,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "puppeteer": "^22.13.1"
-  }
+  },
+  "description": ""
 }
