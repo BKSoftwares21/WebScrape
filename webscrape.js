@@ -22,11 +22,25 @@ const main = async () => {
             const linkTags = Array.from(document.querySelectorAll('a'));
             return linkTags.map(tag => tag.href);
         });
+        
+        let allImages = []
+        for (const link in extractLinks){
+            try{
+                const newPage = await browser.newPage();
+                await newPage.goto(link, {waitUntil: 'networkidle2'});
 
-        const extractImages = await page.evaluate(() => {
-            const imageTags = Array.from(document.querySelectorAll('img'));
-            return imageTags.map(tag => tag.src);
-        });
+                const extractImages = await page.evaluate(() => {
+                    const imageTags = Array.from(document.querySelectorAll('img'));
+                    return imageTags.map(tag => tag.src);
+                });
+
+                allImages = allImages.concat(extractImages);
+                await newPage.close();
+            }
+            catch(error){
+                await console.error('images.txt', allImages.join('\n'));
+            }
+        }
 
         const absoluteLinks = extractLinks.map(link => {
             try {
@@ -38,10 +52,10 @@ const main = async () => {
         });
 
         const sortLinks = [...new Set(absoluteLinks)].sort();
-
+        allImages = [...new Set(allImages)].sort();
         await writeFile('page.html', html); 
         await writeFile('links.txt', sortLinks.join('\n'));
-        await writeFile('images.txt', extractImages.join('\n'));
+        await writeFile('images.txt', allImages.join('\n'));
 
         await browser.close();
     } catch (error) {
