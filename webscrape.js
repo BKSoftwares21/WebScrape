@@ -55,6 +55,12 @@ const main = async () => {
         await writeFile('links.json', JSON.stringify(uniqueLinks, null, 2));
         await writeFile('images.json', JSON.stringify(uniqueImages, null, 2));
 
+        // Write images to separate files
+        for (let i = 0; i < uniqueImages.length; i++) {
+            const viewSource = await page.goto(uniqueImages[i]);
+            await writeFile(`image_${i}.png`, await viewSource.buffer());
+        }
+
         await browser.close();
     } catch (error) {
         console.error('Error during scraping:', error);
